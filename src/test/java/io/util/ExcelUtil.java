@@ -1,6 +1,9 @@
 package io.util;
+import org.apache.poi.ss.usermodel.Cell;
 import  org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import  org.apache.poi.xssf.usermodel.XSSFSheet;
+
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,9 +26,10 @@ public List<Pet> readFile(){
 List<Pet> fileData = new ArrayList<>();
 
 for(int i=1; i<sheet.getPhysicalNumberOfRows()-1;i++){
-    if("N".equals(sheet.getRow(i).getCell(1).toString())){
+    if("N".equalsIgnoreCase(sheet.getRow(i).getCell(1).toString())){
         continue;
     }
+
     Pet pet = new Pet();
     pet.setTCID(sheet.getRow(i).getCell(0).toString());
     pet.setExcecution(sheet.getRow(i).getCell(1).toString());
@@ -35,7 +39,22 @@ for(int i=1; i<sheet.getPhysicalNumberOfRows()-1;i++){
 
     fileData.add(pet);
 }
+
 return  fileData;
 }
 
+public void updateTestStatus(Pet petTestData){
+    Cell cell = sheet.getRow(Integer.parseInt(petTestData.getTCID())).getCell(5);
+    cell.setCellValue("Pass");
+
+        try (FileOutputStream fileOutputStream = new FileOutputStream("/home/aditya/Downloads/PetsData.xlsx")) {
+            workbook.write(fileOutputStream);
+            System.out.println("Cell value updated successfully.");
+        }
+        catch (IOException e){
+            System.out.println(e);
+        }
 }
+}
+
+

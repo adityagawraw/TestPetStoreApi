@@ -1,7 +1,7 @@
 package io.util;
 
 public class Pet {
-    private  String TCID;
+    private String TCID;
     private String excecution;
     private String petId;
     private String additionalMetaData;
