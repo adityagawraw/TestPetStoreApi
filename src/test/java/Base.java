@@ -1,11 +1,19 @@
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import io.util.ExcelUtil;
+import io.util.Pet;
+
 import java.io.File;
+import java.util.List;
 
 public class Base {
     public static void main(String[] args) {
         System.out.println("Hello world!");
-        uploadImage();
+        List<Pet> fileData = new ExcelUtil("/home/aditya/Downloads/PetsData.xlsx",0).readFile();
+        for(Pet pet: fileData){
+            System.out.println(pet.getTCID()+" "+ pet.getExcecution()+" "+ pet.getPetId()+" "+pet.getFilepath());
+        }
+//        uploadImage();
     }
     public static void uploadImage(){
         String baseUrl = "https://petstore.swagger.io/v2/pet/{petId}/uploadImage";
@@ -23,7 +31,7 @@ public class Base {
                 when().
                 post(baseUrl);
 
-        response.then().statusCode(200).contentType("application/json").assertThat().body(match).log().all();
+        response.then().statusCode(200).contentType("application/json").assertThat().log().all();
 
     }
 }
