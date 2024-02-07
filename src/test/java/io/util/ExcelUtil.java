@@ -45,10 +45,12 @@ return  fileData;
 
 public void updateTestStatus(Pet petTestData){
     Cell cell = sheet.getRow(Integer.parseInt(petTestData.getTCID())).getCell(5);
-    cell.setCellValue("Pass");
+    cell.setCellValue(petTestData.getStatus());
 
-        try (FileOutputStream fileOutputStream = new FileOutputStream("/home/aditya/Downloads/PetsData.xlsx")) {
-            workbook.write(fileOutputStream);
+        try {
+            FileOutputStream fileOut = new FileOutputStream("/home/aditya/Downloads/PetsData.xlsx");
+            workbook.write(fileOut);
+            fileOut.close();
             System.out.println("Cell value updated successfully.");
         }
         catch (IOException e){
