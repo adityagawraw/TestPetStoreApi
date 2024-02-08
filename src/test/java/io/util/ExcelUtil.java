@@ -1,10 +1,11 @@
 package io.util;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import  org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import  org.apache.poi.xssf.usermodel.XSSFSheet;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class ExcelUtil {
 XSSFWorkbook workbook;
 XSSFSheet sheet;
 public ExcelUtil (String filePath, int sheetIndex){
-    String path = "/home/aditya/Downloads/PetsData.xlsx";
+    String path = "/home/aditya/Documents/PetsData.xlsx";
 
     try{
         workbook = new XSSFWorkbook(path);
@@ -22,6 +23,7 @@ public ExcelUtil (String filePath, int sheetIndex){
         System.out.println(e);
     }
 }
+
 public List<Pet> readFile(){
 List<Pet> fileData = new ArrayList<>();
 
@@ -43,19 +45,32 @@ for(int i=1; i<sheet.getPhysicalNumberOfRows()-1;i++){
 return  fileData;
 }
 
-public void updateTestStatus(Pet petTestData){
-    Cell cell = sheet.getRow(Integer.parseInt(petTestData.getTCID())).getCell(5);
-    cell.setCellValue(petTestData.getStatus());
+public void updateTestStatus(List<Pet> petTestData){
+    String filepath = "/home/aditya/Documents/PetsData.xlsx";
+    try{
+        FileInputStream inputStream = new FileInputStream(filepath);
+        XSSFWorkbook workbook1 = new XSSFWorkbook(inputStream);
+        XSSFSheet sheet1 = workbook1.getSheet("Sheet1");
+
+        for (Pet pet : petTestData) {
+            int rowNo = Integer.parseInt(pet.getTCID().substring(0, pet.getTCID().length() - 2));
+            Cell cell = sheet1.getRow(rowNo).createCell(5);
+            cell.setCellValue("Pass");
+        }
+//        inputStream.close();
 
         try {
-            FileOutputStream fileOut = new FileOutputStream("/home/aditya/Downloads/PetsData.xlsx");
-            workbook.write(fileOut);
+            FileOutputStream fileOut = new FileOutputStream(filepath);
+            workbook1.write(fileOut);
             fileOut.close();
             System.out.println("Cell value updated successfully.");
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             System.out.println(e);
         }
+    }
+    catch (Exception er){
+        System.out.println(er);
+    }
 }
 }
 
